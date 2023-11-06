@@ -13,25 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.dev33.satoken.reactor.spring;
+package cn.dev33.satoken.application;
 
-import cn.dev33.satoken.context.SaTokenContextForThreadLocal;
-import cn.dev33.satoken.spring.pathmatch.SaPathPatternParserUtil;
+import cn.dev33.satoken.util.SaFoxUtil;
 
 /**
- * Sa-Token 上下文处理器 [ Spring Reactor 版本实现 ] ，基于 SaTokenContextForThreadLocal 定制
- * 
+ * 应用全局信息
+ *
  * @author click33
- * @since 1.33.0
+ * @since 1.31.0
  */
-public class SaTokenContextForSpringReactor extends SaTokenContextForThreadLocal {
-	
-	/**
-	 * 重写路由匹配方法
-	 */
-	@Override
-	public boolean matchPath(String pattern, String path) {
-		return SaPathPatternParserUtil.match(pattern, path);
-	}
-	
+public class ApplicationInfo {
+
+    /**
+     * 应用前缀
+     */
+    public static String routePrefix;
+
+    /**
+     * 为指定 path 裁剪掉 routePrefix 前缀
+     * @param path 指定 path
+     * @return /
+     */
+    public static String cutPathPrefix(String path) {
+        if(! SaFoxUtil.isEmpty(routePrefix) && ! routePrefix.equals("/") && path.startsWith(routePrefix)){
+            path = path.substring(routePrefix.length());
+        }
+        return path;
+    }
+
 }

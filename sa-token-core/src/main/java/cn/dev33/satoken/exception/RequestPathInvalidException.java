@@ -13,25 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.dev33.satoken.reactor.spring;
-
-import cn.dev33.satoken.context.SaTokenContextForThreadLocal;
-import cn.dev33.satoken.spring.pathmatch.SaPathPatternParserUtil;
+package cn.dev33.satoken.exception;
 
 /**
- * Sa-Token 上下文处理器 [ Spring Reactor 版本实现 ] ，基于 SaTokenContextForThreadLocal 定制
+ * 一个异常：代表请求 path 无效或非法
  * 
  * @author click33
- * @since 1.33.0
+ * @since 1.37.0
  */
-public class SaTokenContextForSpringReactor extends SaTokenContextForThreadLocal {
-	
+public class RequestPathInvalidException extends SaTokenException {
+
 	/**
-	 * 重写路由匹配方法
+	 * 序列化版本号
 	 */
-	@Override
-	public boolean matchPath(String pattern, String path) {
-		return SaPathPatternParserUtil.match(pattern, path);
+	private static final long serialVersionUID = 8243974276159004739L;
+
+	/** 具体无效的 path */
+	private final String path;
+
+	/**
+	 * @return 具体无效的 path
+	 */
+	public String getPath() {
+		return path;
 	}
-	
+
+	public RequestPathInvalidException(String message, String path) {
+		super(message);
+		this.path = path;
+	}
+
 }
