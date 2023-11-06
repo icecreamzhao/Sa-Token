@@ -32,6 +32,7 @@ import cn.dev33.satoken.oauth2.model.CodeModel;
 import cn.dev33.satoken.oauth2.model.RequestAuthModel;
 import cn.dev33.satoken.oauth2.model.SaClientModel;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.util.SaFoxUtil;
 import cn.dev33.satoken.util.SaResult;
 
 /**
@@ -53,11 +54,14 @@ public class SaOAuth2Handle {
 		SaResponse res = SaHolder.getResponse();
 		SaOAuth2Config cfg = SaOAuth2Manager.getConfig();
 
+		SaClientModel cm = currClientModel();
+		String prefixUrl = cm.prefixUrl;
+		String reqPath = SaFoxUtil.isNotEmpty(prefixUrl) ? req.getRequestUri().replaceAll(prefixUrl, "") : req.getRequestUri();
+
 		// ------------------ 路由分发 ------------------
 
 		// 模式一：Code授权码
-		if(req.isPath(Api.authorize) && req.isParam(Param.response_type, ResponseType.code)) {
-			SaClientModel cm = currClientModel();
+		if(reqPath.equals(Api.authorize) && req.isParam(Param.response_type, ResponseType.code)) {
 			if(cfg.getIsCode() && (cm.isCode || cm.isAutoMode)) {
 				return authorize(req, res, cfg);
 			}
@@ -65,33 +69,32 @@ public class SaOAuth2Handle {
 		}
 		
 		// Code授权码 获取 Access-Token
-		if(req.isPath(Api.token) && req.isParam(Param.grant_type, GrantType.authorization_code)) {
+		if(reqPath.equals(Api.token) && req.isParam(Param.grant_type, GrantType.authorization_code)) {
 			return token(req, res, cfg);
 		}
 
 		// Refresh-Token 刷新 Access-Token
-		if(req.isPath(Api.refresh) && req.isParam(Param.grant_type, GrantType.refresh_token)) {
+		if(reqPath.equals(Api.refresh) && req.isParam(Param.grant_type, GrantType.refresh_token)) {
 			return refreshToken(req);
 		}
 
 		// 回收 Access-Token
-		if(req.isPath(Api.revoke)) {
+		if(reqPath.equals(Api.revoke)) {
 			return revokeToken(req);
 		}
 
 		// doLogin 登录接口
-		if(req.isPath(Api.doLogin)) {
+		if(reqPath.equals(Api.doLogin)) {
 			return doLogin(req, res, cfg);
 		}
 
 		// doConfirm 确认授权接口
-		if(req.isPath(Api.doConfirm)) {
+		if(reqPath.equals(Api.doConfirm)) {
 			return doConfirm(req);
 		}
 
 		// 模式二：隐藏式
-		if(req.isPath(Api.authorize) && req.isParam(Param.response_type, ResponseType.token)) {
-			SaClientModel cm = currClientModel();
+		if(reqPath.equals(Api.authorize) && req.isParam(Param.response_type, ResponseType.token)) {
 			if(cfg.getIsImplicit() && (cm.isImplicit || cm.isAutoMode)) {
 				return authorize(req, res, cfg);
 			}
@@ -99,8 +102,7 @@ public class SaOAuth2Handle {
 		}
 
 		// 模式三：密码式
-		if(req.isPath(Api.token) && req.isParam(Param.grant_type, GrantType.password)) {
-			SaClientModel cm = currClientModel();
+		if(reqPath.equals(Api.token) && req.isParam(Param.grant_type, GrantType.password)) {
 			if(cfg.getIsPassword() && (cm.isPassword || cm.isAutoMode)) {
 				return password(req, res, cfg);
 			}
@@ -108,8 +110,7 @@ public class SaOAuth2Handle {
 		}
 
 		// 模式四：凭证式
-		if(req.isPath(Api.client_token) && req.isParam(Param.grant_type, GrantType.client_credentials)) {
-			SaClientModel cm = currClientModel();
+		if(reqPath.equals(Api.client_token) && req.isParam(Param.grant_type, GrantType.client_credentials)) {
 			if(cfg.getIsClient() && (cm.isClient || cm.isAutoMode)) {
 				return clientToken(req, res, cfg);
 			}
@@ -297,7 +298,8 @@ public class SaOAuth2Handle {
 		AccessTokenModel at = SaOAuth2Util.generateAccessToken(ra, true);
 
 		// 6、返回 Access-Token
-		return SaResult.data(at.toLineMap());
+//		return at.toLineMap();
+		return retObj;
 	}
 
 	/**

@@ -137,6 +137,12 @@ public interface SaRequest {
 	String getRequestPath();
 
 	/**
+	 * 返回当前请求path (包括上下文名称)
+	 * @return /
+	 */
+	String getRequestUri();
+
+	/**
 	 * 返回当前请求 path 是否为指定值
 	 * @param path path 
 	 * @return /

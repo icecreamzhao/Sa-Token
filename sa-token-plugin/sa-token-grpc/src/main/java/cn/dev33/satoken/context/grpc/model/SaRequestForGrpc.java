@@ -92,6 +92,14 @@ public class SaRequestForGrpc implements SaRequest {
     }
 
     /**
+     * 不返回
+     */
+    @Override
+    public String getRequestUri() {
+        return null;
+    }
+
+    /**
      * 返回当前请求的url，例：http://xxx.com/test
      *
      * @return see note

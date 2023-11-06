@@ -78,6 +78,11 @@ public class SaRequestForSolon implements SaRequest {
     }
 
     @Override
+    public String getRequestUri() {
+        return null;
+    }
+
+    @Override
     public String getUrl() {
         String currDomain = SaManager.getConfig().getCurrDomain();
         if( ! SaFoxUtil.isEmpty(currDomain)) {

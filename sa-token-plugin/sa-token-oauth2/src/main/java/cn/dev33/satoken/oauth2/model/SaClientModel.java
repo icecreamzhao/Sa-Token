@@ -84,6 +84,8 @@ public class SaClientModel implements Serializable {
 	/** 单独配置此Client：Past-Client-Token 保存的时间(单位：秒) [默认取全局配置] */
 	public long pastClientTokenTimeout;
 
+	/** 前置url */
+	public String prefixUrl;
 	
 	public SaClientModel() {
 		SaOAuth2Config config = SaOAuth2Manager.getConfig();
@@ -325,8 +327,16 @@ public class SaClientModel implements Serializable {
 		this.pastClientTokenTimeout = pastClientTokenTimeout;
 		return this;
 	}
-	
-	// 
+
+	/**
+	 * @param prefixUrl 前置url
+	 * @return 对象自身
+	 */
+	public SaClientModel setPrefixUrl(String prefixUrl) {
+		this.prefixUrl = prefixUrl;
+		return this;
+	}
+	//
 	@Override
 	public String toString() {
 		return "SaClientModel [clientId=" + clientId + ", clientSecret=" + clientSecret + ", contractScope="
@@ -334,8 +344,6 @@ public class SaClientModel implements Serializable {
 				+ ", isPassword=" + isPassword + ", isClient=" + isClient + ", isAutoMode=" + isAutoMode
 				+ ", isNewRefresh=" + isNewRefresh + ", accessTokenTimeout=" + accessTokenTimeout
 				+ ", refreshTokenTimeout=" + refreshTokenTimeout + ", clientTokenTimeout=" + clientTokenTimeout
-				+ ", pastClientTokenTimeout=" + pastClientTokenTimeout + "]";
+				+ ", pastClientTokenTimeout=" + pastClientTokenTimeout + ", prefixUrl=" + prefixUrl + "]";
 	}
-	
-	
 }

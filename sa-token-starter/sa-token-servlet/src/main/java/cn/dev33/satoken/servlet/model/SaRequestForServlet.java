@@ -129,6 +129,14 @@ public class SaRequestForServlet implements SaRequest {
 	}
 
 	/**
+	 * 返回当前请求path (包括上下文名称)
+	 */
+	@Override
+	public String getRequestUri() {
+		return request.getRequestURI();
+	}
+
+	/**
 	 * 返回当前请求的url，例：http://xxx.com/test
 	 * @return see note
 	 */
