@@ -542,12 +542,8 @@ public class StpLogic {
 		return SaStrategy.instance.generateUniqueToken.execute(
 				"token",
 				getConfigOfMaxTryTimes(),
-				() -> {
-					return createTokenValue(id, loginModel.getDeviceOrDefault(), loginModel.getTimeout(), loginModel.getExtraData());
-				},
-				tokenValue -> {
-					return getLoginIdNotHandle(tokenValue) == null;
-				}
+				() -> createTokenValue(id, loginModel.getDeviceOrDefault(), loginModel.getTimeout(), loginModel.getExtraData()),
+				tokenValue -> getLoginIdNotHandle(tokenValue) == null
 		);
 	}
 
@@ -2020,7 +2016,7 @@ public class StpLogic {
 	 */
 	public String getTokenValueByLoginId(Object loginId, String device) {
 		List<String> tokenValueList = getTokenValueListByLoginId(loginId, device);
-		return tokenValueList.size() == 0 ? null : tokenValueList.get(tokenValueList.size() - 1);
+		return tokenValueList.isEmpty() ? null : tokenValueList.get(tokenValueList.size() - 1);
 	}
 	
  	/** 
