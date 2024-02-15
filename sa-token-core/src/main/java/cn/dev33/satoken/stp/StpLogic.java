@@ -574,7 +574,7 @@ public class StpLogic {
 		if( ! isSupportExtra()) {
 			// 如果不支持，开发者却传入了 extra 扩展参数，那么就打印警告信息
 			Map<String, Object> extraData = loginModel.getExtraData();
-			if(extraData != null && extraData.size() > 0) {
+			if(extraData != null && !extraData.isEmpty()) {
 				SaManager.log.warn("当前 StpLogic 不支持 extra 扩展参数模式，传入的 extra 参数将被忽略");
 			}
 		}
@@ -908,7 +908,7 @@ public class StpLogic {
 	 */
 	public boolean isLogin(Object loginId) {
 		// 判断条件：能否根据 loginId 查询到对应的 tokenSign 值
-		return getTokenSignListByLoginId(loginId, null).size() > 0;
+		return !getTokenSignListByLoginId(loginId, null).isEmpty();
 	}
 
 	/**
